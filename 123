@@ -1,0 +1,47 @@
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+
+
+class CalculatorApp(App):
+    def build(self):
+        self.grid = GridLayout(cols=4)
+
+        self.equation = ""
+
+        buttons = [
+            '7', '8', '9', '/',
+            '4', '5', '6', '*',
+            '1', '2', '3', '-',
+            'C', '0', '=', '+'
+        ]
+
+        for button in buttons:
+            if button == 'C':
+                self.grid.add_widget(Button(text="Clear", on_press=self.clear))
+            elif button == '=':
+                self.grid.add_widget(Button(text=button, on_press=self.calculate))
+            else:
+                self.grid.add_widget(Button(text=button, on_press=self.append_equation))
+
+        return self.grid
+
+    def append_equation(self, instance):
+        if instance.text != 'C' and instance.text != '=':
+            self.equation += instance.text
+            print(self.equation)
+
+    def clear(self, instance):
+        self.equation = ""
+
+    def calculate(self, instance):
+        try:
+            result = eval(self.equation)
+            self.equation = str(result)
+            print(result)
+        except Exception as e:
+            print("Error:", e)
+
+
+if __name__ == '__main__':
+    CalculatorApp().run()
